@@ -1,45 +1,48 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-
+	import type { EventList } from '$lib/types/types';
+	import { formatDateTime } from '$lib/utils';
 	export let data: PageData;
 
-	$: screenings = data.screenings;
+	$: screenings = data.screenings as EventList;
+	$: console.log('schedule', screenings);
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>Cineville</title>
+	<meta name="description" content="Cineville" />
 </svelte:head>
 
 <section>
-	<h1>Cineville Film Schedule overview page</h1>
-	<p>Schedule overview</p>
-
-	<p>
-		Creat e a small websit e where o ur members can explore t he fi lm sched ule in order t o find a
-		fi lm screening t o att end. Make sure t hey can expl ore t he screenings by day of t he week
-		and search for a specific fi lm. Requ iremen ts The websi t e sho uld have at least two dist inc
-		t pages: Fi lm sched ule overview page where sched ule. t he user can expl ore t he fi lm Fi lm
-		screening de tai l page where specific screening. t he user can view de tai ls abo ut t hat
-	</p>
-
-	<p>Search for a film screening by day of the week and search for a movie</p>
-	<p>find screenings per day, and f9</p>
-	<p>
-		Users sho uld at least be able t o expl ore t he sched ule in t he fo ll owing ways: Find
-		screenings per day, wi t h opt ions from t oday f uture. u n t i l 7 days in t o t he Find
-		screenings for a specific fi lm by searching for (part of) t he fi lm's t i tle.
-	</p>
+	<h1>Cineville Film Schedule</h1>
 
 	<form method="GET">
-		<input name="q" value={data.q || ''} placeholder="Search film..." />
+		<input name="q" value={data.q || ''} placeholder="Search movie..." />
+		<button on:click={() => (data.q = '')}>Clear </button>
 		<button type="submit">Search</button>
 	</form>
 
+	<div class="date-navigation">
+		<button on:click={() => console.log('previous')} disabled={true}>previous day</button>
+
+		<p>This is the scheme for "TODAY"</p>
+
+		<button on:click={() => console.log('next')}>next day</button>
+	</div>
 	{#if screenings}
 		<ul>
-			{#each screenings as screening}
-				<li>{screening.title} - {screening.date}</li>
+			{#each screenings._embedded.events as screening}
+				<a href={`/${screening.productionHint?.title}`}>
+					<li>
+						<div class="time-info">
+							Starts at: {formatDateTime(screening.startDate)} - Ends at: {formatDateTime(
+								screening.endDate
+							)}
+						</div>
+
+						{screening.productionHint.title}
+					</li>
+				</a>
 			{/each}
 		</ul>
 	{/if}
@@ -56,5 +59,44 @@
 
 	h1 {
 		width: 100%;
+	}
+
+	.date-navigation {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 1rem 0;
+		gap: 2rem;
+	}
+
+	.date-navigation button {
+		padding: 0.5rem 1rem;
+		border: 1px solid red;
+	}
+
+	a {
+		width: 100%;
+	}
+
+	ul {
+		list-style: none;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	li {
+		border-radius: 0.5rem;
+		border: 1px solid red;
+		padding: 1rem;
+		width: 100%;
+	}
+
+	.time-info {
+		font-size: 0.8rem;
+		color: black;
 	}
 </style>
