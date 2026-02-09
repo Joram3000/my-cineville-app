@@ -14,10 +14,10 @@
 
 <section>
 	{#if event}
-		<h1>Film title {event.productionHint?.title}</h1>
+		<h1>Film title {event._embedded.production?.title}</h1>
 
 		{#if imageUrl}
-			<img src={imageUrl} alt="Film poster {event.productionHint?.title}" />
+			<img src={imageUrl} alt="Film poster {event._embedded.production?.title}" />
 		{/if}
 
 		<p>Day of the screening {formatDate(event.startDate)}</p>
@@ -33,7 +33,6 @@
 				.street}
 			{event?._embedded?.venue?.address.houseNumber}
 		</p>
-		<p>Film still or poster</p>
 
 		<p>Cast</p>
 		<p>Director(s)</p>

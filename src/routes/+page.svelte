@@ -67,7 +67,7 @@
 							)}
 						</div>
 
-						{screening.productionHint?.title}
+						{screening._embedded.production?.title ?? 'Untitled'}
 					</li>
 				</a>
 			{/each}
