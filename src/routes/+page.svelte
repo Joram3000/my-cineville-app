@@ -8,19 +8,23 @@
 	export let data: PageData;
 
 	$: screenings = data.screenings as EventList;
-	$: console.log('schedule', screenings);
-
-	// Haal huidige datum uit URL of gebruik data.today
-	$: currentDate = $page.url.searchParams.get('date') || data.today;
-
+	$: currentDate = data.today;
+	$: searchResults = data.searchResults; // not implemented yet
 	const amountOfDaysAhead = 7;
 
+	let searching = false;
+	// if there are search result, put searching to false, otherwise true
+	$: searching = data.q ? !searchResults : false;
+
+	// needs to be capped on today - 7 days ahead, NOT jumping 7 days repeatedly
 	function nextDay(daysAhead: number = 1) {
 		const date = new Date(currentDate);
 		date.setDate(date.getDate() + daysAhead);
 		const dateStr = date.toISOString().split('T')[0];
 		goto(`?date=${dateStr}${data.q ? `&q=${data.q}` : ''}`);
 	}
+
+	function searchMovie() {} // needs to be implemented
 </script>
 
 <svelte:head>
@@ -31,15 +35,8 @@
 <section>
 	<h1>Film Schedule</h1>
 
-	<form method="GET">
-		<input name="q" value={data.q || ''} placeholder="Search movie..." />
-		<button on:click={() => (data.q = '')}>Clear </button>
-		<button type="submit">Search</button>
-	</form>
-
 	<div class="date-navigation">
 		<p>Schedule for {formatDateTime(currentDate)}</p>
-
 		<div>
 			<button on:click={() => nextDay(1)}>Tomorrow</button>
 			{#each Array(amountOfDaysAhead - 1) as _, i}
@@ -49,10 +46,20 @@
 			{/each}
 		</div>
 	</div>
+	<form method="GET">
+		<input name="q" value={data.q || ''} placeholder="Search movie..." />
+		<button on:click={() => (data.q = '')}>Clear </button>
+		<button type="submit">Search</button>
+	</form>
+
+	{#if searching}
+		<p>Searching for "{data.q}"...</p>
+	{/if}
+
 	{#if screenings}
 		<ul>
 			{#each screenings._embedded.events as screening}
-				<a href={`/${screening.productionHint?.title}`}>
+				<a href={`/events/${screening.id}`}>
 					<li>
 						<div class="time-info">
 							Starts at: {formatDateTime(screening.startDate)} - Ends at: {formatDateTime(
@@ -60,7 +67,7 @@
 							)}
 						</div>
 
-						{screening.productionHint.title}
+						{screening.productionHint?.title}
 					</li>
 				</a>
 			{/each}
@@ -74,7 +81,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		flex: 0.6;
+		width: 100%;
 	}
 
 	h1 {
@@ -87,15 +94,12 @@
 		align-items: center;
 		margin: 1rem 0;
 		gap: 2rem;
+		width: 100%;
 	}
 
 	.date-navigation button {
 		padding: 0.5rem 1rem;
 		border: 1px solid red;
-	}
-
-	a {
-		width: 100%;
 	}
 
 	ul {
@@ -106,15 +110,21 @@
 		justify-content: center;
 		align-items: center;
 		gap: 1rem;
+		width: 100%;
 	}
 
 	li {
 		border-radius: 0.5rem;
 		border: 1px solid red;
+		/* padding: 1rem; */
 		padding: 1rem;
 		width: 100%;
+		box-sizing: border-box;
 	}
 
+	a {
+		width: 100%;
+	}
 	.time-info {
 		font-size: 0.8rem;
 		color: black;
