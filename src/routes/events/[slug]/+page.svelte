@@ -9,7 +9,7 @@
 
 	$: imageUrl = event?._embedded?.production?.assets.poster?.url
 		? event._embedded.production.assets.poster.url
-		: event._embedded.venue?.assets.cover?.url;
+		: event?._embedded.venue?.assets.cover?.url;
 </script>
 
 <section>
@@ -45,7 +45,6 @@
 
 <style>
 	section {
-		padding: 1rem;
 		width: 100%;
 		max-width: 800px;
 		margin: 0 auto;

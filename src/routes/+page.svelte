@@ -10,15 +10,8 @@
 	$: screenings = data.screenings as EventList;
 	$: currentDate = data.today;
 
-	// $: searchResults = data.searchResults; // not implemented yet
-
 	const amountOfDaysAhead = 7;
-
-	let searching = false;
-	// if there are search result, put searching to false, otherwise true
-	// $: searching = data.q ? !searchResults : false;
-
-	// needs to be capped on today - 7 days ahead, NOT jumping 7 days repeatedly
+	// should be capped on max 7 days ahead, not jumping 7 days repeatedly
 	function nextDay(daysAhead: number = 1) {
 		const date = new Date(currentDate);
 		date.setDate(date.getDate() + daysAhead);
@@ -26,6 +19,11 @@
 		goto(`?date=${dateStr}${data.q ? `&q=${data.q}` : ''}`);
 	}
 
+	// $: searchResults = data.searchResults; // not implemented yet
+	let searching = false;
+	// if there are search result, put searching to false, otherwise true
+	// $: searching = data.q ? !searchResults : false;
+	// needs to be capped on today - 7 days ahead, NOT jumping 7 days repeatedly
 	function searchMovie() {} // needs to be implemented
 </script>
 
@@ -48,8 +46,9 @@
 			{/each}
 		</div>
 	</div>
+
 	<form method="GET">
-		<input name="q" value={data.q || ''} placeholder="Search movie..." />
+		<input name="q" value={data.q || ''} placeholder="(to be implemented)..." />
 		<button on:click={() => (data.q = '')}>Clear </button>
 		<button type="submit">Search</button>
 	</form>
@@ -63,13 +62,20 @@
 			{#each screenings._embedded.events as screening}
 				<a href={`/events/${screening.id}`}>
 					<li>
+						{#if screening._embedded.production?.assets.poster?.url}
+							<img
+								src={screening._embedded.production?.assets.poster?.url}
+								alt={`${screening._embedded.production?.title} poster`}
+								width="100"
+							/>
+						{/if}
 						<div class="time-info">
 							Starts at: {formatDateTime(screening.startDate)} - Ends at: {formatDateTime(
 								screening.endDate
 							)}
 						</div>
 
-						{screening.productionHint?.title}
+						{screening._embedded.production?.title}
 					</li>
 				</a>
 			{/each}

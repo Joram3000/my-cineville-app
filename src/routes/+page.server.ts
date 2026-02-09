@@ -26,7 +26,7 @@ async function fetchScreenings(fetch: typeof globalThis.fetch, date: Date, query
 	endOfDay.setHours(23, 59, 59, 999);
 
 	const response = await fetch(
-		`https://api.cineville.nl//events?startDate[gte]=${startOfDay.toISOString()}&startDate[lt]=${endOfDay.toISOString()}`
+		`https://api.cineville.nl//events?startDate[gte]=${startOfDay.toISOString()}&startDate[lt]=${endOfDay.toISOString()}&embed[production]=true`
 	);
 
 	const screenings: EventList = await response.json();

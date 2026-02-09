@@ -32,10 +32,6 @@
 	<main>
 		{@render children()}
 	</main>
-
-	<footer>
-		<a href="https://joramkroon-portfolio.vercel.app/">joramkroon-portfolio.vercel.app</a>
-	</footer>
 </div>
 
 <style>
