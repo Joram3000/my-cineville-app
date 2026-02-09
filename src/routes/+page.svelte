@@ -2,10 +2,25 @@
 	import type { PageData } from './$types';
 	import type { EventList } from '$lib/types/types';
 	import { formatDateTime } from '$lib/utils';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+
 	export let data: PageData;
 
 	$: screenings = data.screenings as EventList;
 	$: console.log('schedule', screenings);
+
+	// Haal huidige datum uit URL of gebruik data.today
+	$: currentDate = $page.url.searchParams.get('date') || data.today;
+
+	const amountOfDaysAhead = 7;
+
+	function nextDay(daysAhead: number = 1) {
+		const date = new Date(currentDate);
+		date.setDate(date.getDate() + daysAhead);
+		const dateStr = date.toISOString().split('T')[0];
+		goto(`?date=${dateStr}${data.q ? `&q=${data.q}` : ''}`);
+	}
 </script>
 
 <svelte:head>
@@ -14,7 +29,7 @@
 </svelte:head>
 
 <section>
-	<h1>Cineville Film Schedule</h1>
+	<h1>Film Schedule</h1>
 
 	<form method="GET">
 		<input name="q" value={data.q || ''} placeholder="Search movie..." />
@@ -23,11 +38,16 @@
 	</form>
 
 	<div class="date-navigation">
-		<button on:click={() => console.log('previous')} disabled={true}>previous day</button>
+		<p>Schedule for {formatDateTime(currentDate)}</p>
 
-		<p>This is the scheme for "TODAY"</p>
-
-		<button on:click={() => console.log('next')}>next day</button>
+		<div>
+			<button on:click={() => nextDay(1)}>Tomorrow</button>
+			{#each Array(amountOfDaysAhead - 1) as _, i}
+				<button on:click={() => nextDay(i + 2)}>
+					+{i + 2} days
+				</button>
+			{/each}
+		</div>
 	</div>
 	{#if screenings}
 		<ul>

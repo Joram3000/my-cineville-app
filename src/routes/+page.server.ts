@@ -1,27 +1,35 @@
 import type { EventList } from '$lib/types/types';
 import type { PageServerLoad } from './$types';
 
-
-
-
-
 export const load: PageServerLoad = async ({ url, fetch }) => {
-	const q = url.searchParams.get('q') || '';
+	const dateParam = url.searchParams.get('date');
+	const q = url.searchParams.get('q');
 
-	console.log('Fetching screenings...');
-	console.log('Search query:', q);
+	// if no date provided, use today
+	const today = dateParam ? new Date(dateParam) : new Date();
 
-	const response = await fetch(
-		`https://api.cineville.nl//events?startDate[gte]=2026-01-28T08:00:00.000Z&startDate[lt]=2026-01-
-29T00:00:00.000Z`
-	);
-
-	const screenings: EventList = await response.json();
-
-	console.log('some result', screenings);
+	// fetch screenings for the given date
+	const screenings = await fetchScreenings(fetch, today, q);
 
 	return {
+		today: today.toISOString(),
 		screenings,
 		q
 	};
 };
+
+async function fetchScreenings(fetch: typeof globalThis.fetch, date: Date, query?: string | null) {
+	const startOfDay = new Date(date);
+	startOfDay.setHours(0, 0, 0, 0);
+
+	const endOfDay = new Date(date);
+	endOfDay.setHours(23, 59, 59, 999);
+
+	const response = await fetch(
+		`https://api.cineville.nl//events?startDate[gte]=${startOfDay.toISOString()}&startDate[lt]=${endOfDay.toISOString()}`
+	);
+
+	const screenings: EventList = await response.json();
+
+	return screenings;
+}
