@@ -9,12 +9,14 @@
 
 	$: screenings = data.screenings as EventList;
 	$: currentDate = data.today;
-	$: searchResults = data.searchResults; // not implemented yet
+
+	// $: searchResults = data.searchResults; // not implemented yet
+
 	const amountOfDaysAhead = 7;
 
 	let searching = false;
 	// if there are search result, put searching to false, otherwise true
-	$: searching = data.q ? !searchResults : false;
+	// $: searching = data.q ? !searchResults : false;
 
 	// needs to be capped on today - 7 days ahead, NOT jumping 7 days repeatedly
 	function nextDay(daysAhead: number = 1) {
@@ -67,7 +69,7 @@
 							)}
 						</div>
 
-						{screening._embedded.production?.title ?? 'Untitled'}
+						{screening.productionHint?.title}
 					</li>
 				</a>
 			{/each}
