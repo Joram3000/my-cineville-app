@@ -13,10 +13,13 @@ export type EventList = {
 
 export type Event = {
 	id: string;
-	productionId: Production["id"];
-	venueId: Venue["id"];
+	productionId: Production['id'];
+	venueId: Venue['id'];
 	ticketingUrl: string | null;
 	startDate: string;
+	productionHint: {
+		title: string;
+	};
 	endDate: string | null;
 	attributes: {
 		subtitles?: string[];
@@ -36,6 +39,9 @@ export type Production = {
 	id: string;
 	slug: string;
 	title: string;
+	productionHint: {
+		title: string;
+	};
 	attributes: {
 		cast?: string[];
 		duration?: number;
