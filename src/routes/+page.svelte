@@ -35,6 +35,7 @@
 <section>
 	<h1>Film Schedule</h1>
 
+	<p>I made a V2!</p>
 	<div class="date-navigation">
 		<p>Schedule for {formatDateTime(currentDate)}</p>
 		<div>
@@ -94,6 +95,8 @@
 
 	h1 {
 		width: 100%;
+		padding: 1rem;
+		margin: 0;
 	}
 
 	.date-navigation {

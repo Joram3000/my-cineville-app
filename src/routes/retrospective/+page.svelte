@@ -23,4 +23,15 @@
 		would do a proper cleanup and refactor the code into clearer, reusable components (such as a
 		movie/event card).
 	</p>
+
+	<p>
+		Apperently I wasnt up to date with the latest Svelte changes. So I took some time to create a
+		version 2, as I wasnt satisfied with the result of my first attempt. After reading the assigment
+		I expected to be done in 2 hours as the assignment seemed pretty straightforward, but I
+		underestimated the time it would take to fetch the data and get it to work. Today I optimized a
+		couple of things, out of curiousity to try some new things withouth the stress of working
+		against the clock. Now the basic functionality is there. There is still some stuff that I would
+		like to do: a loading state and error handling for the data fetching, a search functionality,
+		and a more complete UI. But I at least now it got the minimal functionality.
+	</p>
 </div>

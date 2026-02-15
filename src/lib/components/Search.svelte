@@ -20,6 +20,5 @@
 		align-items: flex-end;
 		justify-content: flex-end;
 		width: fit-content;
-		border: 1px solid orange;
 	}
 </style>

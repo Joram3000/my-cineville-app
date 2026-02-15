@@ -14,7 +14,7 @@
 
 <section>
 	{#if event}
-		<h1>Film title {event._embedded.production?.title}</h1>
+		<h1>{event._embedded.production?.title}</h1>
 
 		{#if imageUrl}
 			<img src={imageUrl} alt="Film poster {event._embedded.production?.title}" />
