@@ -11,22 +11,11 @@
 	$: screenings = data.screenings as EventList;
 
 	const today = startOfDay(new Date());
+	let currentDate = today;
+	let offset = 0;
 
-	function parseDateParam(value: string | null): Date {
-		if (!value) return today;
-		const parsed = new Date(value);
-		if (Number.isNaN(parsed.getTime())) return today;
-		return startOfDay(parsed);
-	}
-
-	let currentDate = parseDateParam(data?.date ?? null);
-
-	$: daysFromToday = Math.max(
-		0,
-		Math.floor((currentDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-	);
-
-	function getDayAtOffset(offset: number) {
+	function getDayAtOffset(newOffset: number) {
+		offset = newOffset;
 		const target = new Date(today);
 		target.setDate(today.getDate() + offset);
 		currentDate = target;
@@ -44,19 +33,13 @@
 
 	<div class="date-navigation">
 		<div class="date-buttons">
-			<button on:click={() => getDayAtOffset(0)} disabled={daysFromToday === 0}>Today</button>
-			<button on:click={() => getDayAtOffset(1)} disabled={daysFromToday === 1}>Tomorrow</button>
-			<button on:click={() => getDayAtOffset(2)} disabled={daysFromToday === 2}>+ 2</button>
-			<button on:click={() => getDayAtOffset(3)} disabled={daysFromToday === 3}>+ 3</button>
-			<button on:click={() => getDayAtOffset(4)} disabled={daysFromToday === 4}>+ 4</button>
-			<button on:click={() => getDayAtOffset(5)} disabled={daysFromToday === 5}>+ 5</button>
-			<button on:click={() => getDayAtOffset(6)} disabled={daysFromToday === 6}>+ 6</button>
-			<button
-				on:click={() => getDayAtOffset(MAX_DAYS_AHEAD)}
-				disabled={daysFromToday === MAX_DAYS_AHEAD}
-			>
-				+ 7
-			</button>
+			<button on:click={() => getDayAtOffset(0)} disabled={offset === 0}>Today</button>
+			<button on:click={() => getDayAtOffset(1)} disabled={offset === 1}>Tomorrow</button>
+
+			{#each Array(MAX_DAYS_AHEAD - 1) as _, i}
+				<button on:click={() => getDayAtOffset(i + 2)} disabled={offset === i + 2}>+ {i + 2}</button
+				>
+			{/each}
 		</div>
 	</div>
 
@@ -68,6 +51,8 @@
 				</li>
 			{/each}
 		</ul>
+	{:else}
+		<p>No screenings found!</p>
 	{/if}
 </section>
 

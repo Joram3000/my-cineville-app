@@ -3,7 +3,7 @@
 	import { formatDateTime } from '$lib/utils';
 	export let screening: Event;
 
-	let imgSrc =
+	$: imgSrc =
 		screening._embedded.production?.assets.cover?.url ??
 		screening._embedded.production?.assets.poster?.url ??
 		undefined;
