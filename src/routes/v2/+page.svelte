@@ -9,7 +9,6 @@
 	export let data: PageData;
 
 	$: screenings = data.screenings as EventList;
-	let displayedScreenings: EventList = screenings;
 
 	const today = startOfDay(new Date());
 
@@ -61,9 +60,9 @@
 		</div>
 	</div>
 
-	{#if displayedScreenings}
+	{#if screenings}
 		<ul>
-			{#each displayedScreenings._embedded.events as screening}
+			{#each screenings._embedded.events as screening}
 				<li>
 					<Card {screening} />
 				</li>
