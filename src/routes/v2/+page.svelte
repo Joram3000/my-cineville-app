@@ -3,7 +3,7 @@
 	import type { EventList } from '$lib/types/types';
 	import Card from '$lib/components/Card.svelte';
 	import { MAX_DAYS_AHEAD } from '$lib/utils/constants';
-	import { startOfDay } from '$lib/utils';
+	import { formatDate, startOfDay } from '$lib/utils';
 	import { goto } from '$app/navigation';
 
 	export let data: PageData;
@@ -29,18 +29,14 @@
 </svelte:head>
 
 <section>
-	<h1>Film Schedule for {currentDate.toDateString()}</h1>
+	<h1>Film Schedule for {formatDate(currentDate.toISOString())}</h1>
 
-	<div class="date-navigation">
-		<div class="date-buttons">
-			<button on:click={() => getDayAtOffset(0)} disabled={offset === 0}>Today</button>
-			<button on:click={() => getDayAtOffset(1)} disabled={offset === 1}>Tomorrow</button>
-
-			{#each Array(MAX_DAYS_AHEAD - 1) as _, i}
-				<button on:click={() => getDayAtOffset(i + 2)} disabled={offset === i + 2}>+ {i + 2}</button
-				>
-			{/each}
-		</div>
+	<div class="date-buttons">
+		<button on:click={() => getDayAtOffset(0)} disabled={offset === 0}>Today</button>
+		<button on:click={() => getDayAtOffset(1)} disabled={offset === 1}>Tomorrow</button>
+		{#each Array(MAX_DAYS_AHEAD - 1) as _, i}
+			<button on:click={() => getDayAtOffset(i + 2)} disabled={offset === i + 2}>+ {i + 2}</button>
+		{/each}
 	</div>
 
 	{#if screenings}
@@ -69,23 +65,13 @@
 		width: 100%;
 	}
 
-	.date-navigation {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin: 1rem 0;
-		width: 100%;
-		flex-wrap: wrap;
-	}
-
 	.date-buttons {
 		display: flex;
 		gap: 0.5rem;
 		flex-wrap: wrap;
-		justify-content: first baseline;
 	}
 
-	.date-navigation button {
+	.date-buttons button {
 		padding: 0.5rem 1rem;
 		border: 1px solid red;
 	}

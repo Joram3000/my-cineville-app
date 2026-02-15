@@ -1,12 +1,11 @@
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
-	const slug = params.slug; // dit is alleen de slug in /v2/[slug]
-	const cleanedSlug = slug.replace(/^\/?v2\//, ''); // extra safety
+	const slug = params.slug;
 
 	try {
 		const response = await fetch(
-			`https://api.cineville.nl/events/${encodeURIComponent(cleanedSlug)}?embed[production]=true&embed[venue]=true`
+			`https://api.cineville.nl/events/${encodeURIComponent(slug)}?embed[production]=true&embed[venue]=true`
 		);
 
 		if (!response.ok) {
@@ -16,13 +15,13 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 		const event = await response.json();
 
 		return {
-			slug: cleanedSlug,
+			slug: slug,
 			event
 		};
 	} catch (error) {
 		console.error('Failed to fetch event:', error);
 		return {
-			slug: cleanedSlug,
+			slug: slug,
 			event: null,
 			error: 'Failed to load event details'
 		};

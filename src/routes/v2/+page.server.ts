@@ -1,10 +1,9 @@
 import type { EventList } from '$lib/types/types';
+import { endOfDay, startOfDay } from '$lib/utils';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ url, fetch }) => {
 	const dateParam = url.searchParams.get('date');
-	const q = url.searchParams.get('q')?.trim() ?? '';
-
 	const selectedDate = dateParam ? new Date(dateParam) : new Date();
 
 	if (Number.isNaN(selectedDate.getTime())) {
@@ -13,20 +12,16 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
 
 	const events = await fetchEvents(fetch, selectedDate);
 	return {
-		screenings: events,
-		q
+		screenings: events
 	};
 };
 
 async function fetchEvents(fetchFn: typeof fetch, date: Date): Promise<EventList> {
-	const startOfDay = new Date(date);
-	startOfDay.setHours(0, 0, 0, 0);
-
-	const endOfDay = new Date(date);
-	endOfDay.setHours(23, 59, 59, 999);
+	const startOfDayTime = startOfDay(date);
+	const endOfDayTime = endOfDay(date);
 
 	const response = await fetchFn(
-		`https://api.cineville.nl/events?startDate[gte]=${startOfDay.toISOString()}&startDate[lt]=${endOfDay.toISOString()}&embed[production]=true`
+		`https://api.cineville.nl/events?startDate[gte]=${startOfDayTime.toISOString()}&startDate[lt]=${endOfDayTime.toISOString()}&embed[production]=true`
 	);
 
 	if (!response.ok) {

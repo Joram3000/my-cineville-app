@@ -98,7 +98,3 @@ button:focus:not(:focus-visible) {
 	width: 1px;
 	white-space: nowrap;
 }
-
-.outline-enabled * {
-	outline: 1px dotted rgb(239, 4, 180);
-}

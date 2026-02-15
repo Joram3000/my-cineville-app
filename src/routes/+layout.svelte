@@ -3,27 +3,6 @@
 	import Header from '../lib/components/Header.svelte';
 
 	let { children } = $props();
-	let outlineEnabled = true;
-	onMount(() => {
-		const handleKeydown = (e: KeyboardEvent) => {
-			if (e.shiftKey && e.key.toLowerCase() === 'o') {
-				e.preventDefault();
-				outlineEnabled = !outlineEnabled;
-
-				if (outlineEnabled) {
-					document.body.classList.remove('outline-enabled');
-				} else {
-					document.body.classList.add('outline-enabled');
-				}
-			}
-		};
-
-		window.addEventListener('keydown', handleKeydown);
-
-		return () => {
-			window.removeEventListener('keydown', handleKeydown);
-		};
-	});
 </script>
 
 <div class="app">
