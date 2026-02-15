@@ -3,6 +3,7 @@
 
 <header>
 	<a href="/">Home</a>
+	<a href="/v2">V2</a>
 	<a href="/retrospective">Retrospective</a>
 	<a href="https://github.com/Joram3000/my-cineville-app">Github repo here</a>
 </header>
