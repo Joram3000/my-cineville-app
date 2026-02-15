@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import type { EventList } from '$lib/types/types';
-	import { goto } from '$app/navigation';
 	import Card from '$lib/components/Card.svelte';
 	import { MAX_DAYS_AHEAD } from '$lib/utils/constants';
 	import { startOfDay } from '$lib/utils';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
 
