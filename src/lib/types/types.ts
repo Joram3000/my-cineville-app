@@ -17,6 +17,9 @@ export type Event = {
 	venueId: Venue['id'];
 	ticketingUrl: string | null;
 	startDate: string;
+	productionHint: {
+		title: string;
+	};
 	endDate: string | null;
 	attributes: {
 		subtitles?: string[];
